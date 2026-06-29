@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'JetBrains Mono',monospace;background:#020408;color:#e8f8f0;overflow:hidden;height:420px}
+  :root{--neon:#00ff9d;--blue:#0af;--red:#ff4466;--bg:#020408;--card:rgba(7,24,40,0.85);--border:rgba(0,255,157,0.18)}
+  .wrap{display:flex;height:420px;position:relative}
+  /* SIDEBAR */
+  .sb{width:200px;background:rgba(2,6,10,0.97);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:2}
+  .sb-logo{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .sb-mark{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+  .logo-ico{width:20px ;height:32px;background:linear-gradient(135deg,#00ff9d,#0af);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:900;font-size:0.75rem;color:#020408;flex-shrink:0}
+  .logo-t{font-family:'Orbitron',sans-serif;font-size:0.6rem;font-weight:800;letter-spacing:0.2em;color:#e8f8f0}
+  .logo-s{font-size:0.45rem;letter-spacing:0.15em;color:#3a6070}
+  .nav{padding:10px 8px;flex:1}
+  .nl{font-size:0.45rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a6070;padding:8px 6px 4px}
+  .ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;font-size:0.65rem;color:#7aabb8;margin-bottom:2px;cursor:pointer;transition:all 0.2s;border:1px solid transparent}
+  .ni:hover{background:rgba(0,255,157,0.05);color:#e8f8f0}
+  .ni.active{background:linear-gradient(135deg,rgba(0,255,157,0.12),rgba(0,170,255,0.06));color:#00ff9d;border-color:rgba(0,255,157,0.2);position:relative}
+  .ni.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:#00ff9d;border-radius:0 2px 2px 0;box-shadow:0 0 8px #00ff9d}
+  .dot{width:6px;height:6px;border-radius:50%;background:#ff4466;margin-left:auto;box-shadow:0 0 5px #ff4466;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  /* MAIN */
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+  /* TOPBAR */
+  .topbar{height:52px;background:rgba(2,6,10,0.92);border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0}
+  .tb-l{display:flex;flex-direction:column}
+  .tb-title{font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.1em}
+  .tb-bc{font-size:0.5rem;color:#3a6070;letter-spacing:0.05em;margin-top:1px}
+  .tb-bc span{color:#00ff9d}
+  .tb-r{display:flex;align-items:center;gap:14px}
+  .tb-clock{font-family:'Orbitron',sans-serif;font-size:0.72rem;color:#00ff9d;letter-spacing:0.1em;text-shadow:0 0 8px rgba(0,255,157,0.4)}
+  .tb-sts{display:flex;align-items:center;gap:5px;font-size:0.55rem;color:#7aabb8}
+  .sts-dot{width:6px;height:6px;border-radius:50%;background:#00ff9d;box-shadow:0 0 6px #00ff9d;animation:pulse 2s infinite}
+  .tb-btn{width:30px;height:30px;border:1px solid rgba(255,255,255,0.07);border-radius:6px;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:#7aabb8;font-size:0.85rem;cursor:pointer;position:relative}
+  .notif-d{position:absolute;top:3px;right:3px;width:6px;height:6px;background:#ff4466;border-radius:50%;box-shadow:0 0 5px #ff4466}
+  /* CONTENT */
+  .content{flex:1;padding:16px;overflow:hidden;background:linear-gradient(135deg,rgba(0,255,157,0.015) 0%,transparent 60%)}
+  /* METRIC GRID */
+  .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .pt{font-family:'Orbitron',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;color:#00ff9d;display:flex;align-items:center;gap:8px}
+  .pt::before{content:'';width:3px;height:13px;background:#00ff9d;border-radius:2px;box-shadow:0 0 6px #00ff9d}
+  .mg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  .mc{background:rgba(7,24,40,0.8);border:1px solid rgba(0,255,157,0.12);border-radius:10px;padding:14px;position:relative;overflow:hidden;transition:border-color 0.2s}
+  .mc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,157,0.025),transparent 60%);pointer-events:none}
+  .mc:hover{border-color:rgba(0,255,157,0.3)}
+  .ml{font-size:0.5rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#3a6070;margin-bottom:6px}
+  .mv{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;line-height:1;margin-bottom:3px}
+  .mv.neon{color:#00ff9d;text-shadow:0 0 10px rgba(0,255,157,0.4)}
+  .mv.blue{color:#0af;text-shadow:0 0 10px rgba(0,170,255,0.4)}
+  .mv.yellow{color:#ffcc00}
+  .mv.red{color:#ff4466}
+  .mu{font-size:0.55rem;color:#7aabb8;margin-left:2px}
+  .mch{font-size:0.55rem;margin-top:4px}
+  .up{color:#00ff9d}.dn{color:#ff4466}
+  .pb{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;margin-top:8px}
+  .pf{height:100%;border-radius:2px;position:relative}
+  .pf::after{content:'';position:absolute;right:0;top:0;width:12px;height:100%;background:rgba(255,255,255,0.3);filter:blur(2px)}
+  /* BOTTOM GRID */
+  .bg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .card{background:rgba(7,24,40,0.8);border:1px solid rgba(0,255,157,0.12);border-radius:10px;padding:14px}
+  .ct{font-family:'Orbitron',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#00ff9d;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .ct::before{content:'';width:2px;height:10px;background:#00ff9d;border-radius:1px}
+  .row-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:0.62rem}
+  .ri-label{color:#7aabb8}
+  .ri-val{font-weight:500;color:#e8f8f0}
+  .ri-badge{padding:2px 7px;border-radius:999px;font-size:0.5rem;font-weight:600;letter-spacing:0.08em}
+  .bg-ok{background:rgba(0,255,157,0.1);color:#00ff9d;border:1px solid rgba(0,255,157,0.2)}
+  .bg-warn{background:rgba(255,204,0,0.1);color:#ffcc00;border:1px solid rgba(255,204,0,0.2)}
+  .bg-err{background:rgba(255,68,102,0.1);color:#ff4466;border:1px solid rgba(255,68,102,0.2)}
+  /* SCAN LINES */
+  .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:999}
+  /* MINI CHART */
+  .sparkline{display:flex;align-items:flex-end;gap:2px;height:30px;margin-top:4px}
+  .sb-bar{flex:1;background:rgba(0,255,157,0.15);border-radius:2px;min-height:4px;transition:height 0.3s}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="scanlines"></div>
+  <!-- SIDEBAR -->
+  <div class="sb">
+    <div class="sb-logo">
+      <div class="sb-mark">
+        <div class="logo-ico">PG</div>
+        <div><div class="logo-t">PHANTOMGRID</div><div class="logo-s">CYBER SECURITY DEPT</div></div>
+      </div>
+    </div>
+    <div class="nav">
+      <div class="nl">MAIN</div>
+      <div class="ni active">⬡ Dashboard</div>
+      <div class="ni">◈ Infrastructure</div>
+      <div class="ni">⚡ Performance Lab</div>
+      <div class="nl">ANALYSIS</div>
+      <div class="ni">⚠ Threat Analysis <div class="dot"></div></div>
+      <div class="ni">📊 Reports</div>
+      <div class="ni">↓ Downloads</div>
+      <div class="nl">TOOLS</div>
+      <div class="ni">◉ AI Assistant</div>
+      <div class="ni">⚙ Settings</div>
+    </div>
+  </div>
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-l">
+        <div class="tb-title">SYSTEM OVERVIEW</div>
+        <div class="tb-bc">PHANTOMGRID / <span>Dashboard</span></div>
+      </div>
+      <div class="tb-r">
+        <div class="tb-sts"><div class="sts-dot"></div>ALL SYSTEMS NOMINAL</div>
+        <div class="tb-clock" id="clock">00:00:00</div>
+        <div class="tb-btn">🔔<div class="notif-d"></div></div>
+        <div class="tb-btn">👤</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="ph">
+        <div class="pt">LIVE METRICS</div>
+        <div style="font-size:0.5rem;color:#3a6070;letter-spacing:0.08em">UPDATED EVERY SECOND</div>
+      </div>
+      <div class="mg">
+        <div class="mc">
+          <div class="ml">CPU Usage</div>
+          <div class="mv neon" id="cpu">42<span class="mu">%</span></div>
+          <div class="mch up">↑ +2.1% from avg</div>
+          <div class="pb"><div class="pf" id="cpu-bar" style="width:42%;background:linear-gradient(90deg,#00cc7a,#00ff9d);box-shadow:0 0 6px rgba(0,255,157,0.5)"></div></div>
+        </div>
+        <div class="mc">
+          <div class="ml">Memory</div>
+          <div class="mv blue" id="mem">67<span class="mu">%</span></div>
+          <div class="mch dn">↓ -1.3% from avg</div>
+          <div class="pb"><div class="pf" id="mem-bar" style="width:67%;background:linear-gradient(90deg,#0088cc,#0af);box-shadow:0 0 6px rgba(0,170,255,0.5)"></div></div>
+        </div>
+        <div class="mc">
+          <div class="ml">Bandwidth</div>
+          <div class="mv neon" id="bw">1.8<span class="mu">Gbps</span></div>
+          <div class="mch up">↑ Normal range</div>
+          <div class="pb"><div class="pf" id="bw-bar" style="width:45%;background:linear-gradient(90deg,#009966,#00ff9d);box-shadow:0 0 6px rgba(0,255,157,0.4)"></div></div>
+        </div>
+        <div class="mc">
+          <div class="ml">Latency</div>
+          <div class="mv yellow" id="lat">24<span class="mu">ms</span></div>
+          <div class="mch up">↑ Excellent</div>
+          <div class="pb"><div class="pf" id="lat-bar" style="width:24%;background:linear-gradient(90deg,#cc9900,#ffcc00);box-shadow:0 0 6px rgba(255,204,0,0.4)"></div></div>
+        </div>
+      </div>
+      <!-- SPARKLINE ROW -->
+      <div class="mg" style="margin-bottom:14px">
+        <div class="mc">
+          <div class="ml">Req/sec</div>
+          <div class="mv neon" id="rps">8,432<span class="mu"></span></div>
+          <div class="sparkline" id="spark-rps"></div>
+        </div>
+        <div class="mc">
+          <div class="ml">Uptime</div>
+          <div class="mv neon">99.97<span class="mu">%</span></div>
+          <div class="sparkline" id="spark-up"></div>
+        </div>
+        <div class="mc">
+          <div class="ml">Active Sessions</div>
+          <div class="mv blue" id="sess">1,247</div>
+          <div class="sparkline" id="spark-sess"></div>
+        </div>
+        <div class="mc">
+          <div class="ml">Threat Score</div>
+          <div class="mv" style="color:#00ff9d" id="threat">LOW</div>
+          <div class="mch" style="color:#3a6070">No active threats</div>
+          <div class="pb"><div class="pf" style="width:12%;background:linear-gradient(90deg,#00cc7a,#00ff9d)"></div></div>
+        </div>
+      </div>
+      <!-- BOTTOM ROW -->
+      <div class="bg2">
+        <div class="card">
+          <div class="ct">Infrastructure Status</div>
+          <div class="row-item"><span class="ri-label">Web Gateway</span><span class="ri-badge bg-ok">ONLINE</span></div>
+          <div class="row-item"><span class="ri-label">Auth Service</span><span class="ri-badge bg-ok">ONLINE</span></div>
+          <div class="row-item"><span class="ri-label">Database Cluster</span><span class="ri-badge bg-ok">ONLINE</span></div>
+          <div class="row-item"><span class="ri-label">CDN Nodes</span><span class="ri-badge bg-warn">DEGRADED</span></div>
+          <div class="row-item"><span class="ri-label">API Gateway</span><span class="ri-badge bg-ok">ONLINE</span></div>
+        </div>
+        <div class="card">
+          <div class="ct">Recent Alerts</div>
+          <div class="row-item"><span class="ri-label" style="font-size:0.55rem">⚠ CDN latency spike detected</span><span style="font-size:0.5rem;color:#3a6070">2m ago</span></div>
+          <div class="row-item"><span class="ri-label" style="font-size:0.55rem">✓ Backup completed</span><span style="font-size:0.5rem;color:#3a6070">14m ago</span></div>
+          <div class="row-item"><span class="ri-label" style="font-size:0.55rem">✓ SSL cert renewed</span><span style="font-size:0.5rem;color:#3a6070">1h ago</span></div>
+          <div class="row-item"><span class="ri-label" style="font-size:0.55rem">● Auth audit passed</span><span style="font-size:0.5rem;color:#3a6070">3h ago</span></div>
+          <div class="row-item"><span class="ri-label" style="font-size:0.55rem">✓ Threat scan complete</span><span style="font-size:0.5rem;color:#3a6070">6h ago</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// Clock
+function tick(){
+  const n=new Date();
+  document.getElementById('clock').textContent=
+    String(n.getHours()).padStart(2,'0')+':'+
+    String(n.getMinutes()).padStart(2,'0')+':'+
+    String(n.getSeconds()).padStart(2,'0');
+}
+tick(); setInterval(tick,1000);
+
+// Sparkline init
+function initSpark(id,color){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.innerHTML='';
+  for(let i=0;i<8;i++){
+    const b=document.createElement('div');
+    b.className='sb-bar';
+    const h=Math.random()*70+20;
+    b.style.height=h+'%';
+    b.style.background=color;
+    el.appendChild(b);
+  }
+}
+initSpark('spark-rps','rgba(0,255,157,0.5)');
+initSpark('spark-up','rgba(0,255,157,0.3)');
+initSpark('spark-sess','rgba(0,170,255,0.5)');
+
+// Animate metrics
+function rand(min,max){return Math.floor(Math.random()*(max-min)+min);}
+function animateMetrics(){
+  const cpu=rand(35,72);
+  const mem=rand(55,80);
+  const bw=(1.2+Math.random()*1.4).toFixed(1);
+  const lat=rand(18,45);
+  const rps=(7000+rand(0,3000)).toLocaleString();
+  const sess=(1100+rand(0,300)).toLocaleString();
+
+  document.getElementById('cpu').innerHTML=cpu+'<span class="mu">%</span>';
+  document.getElementById('mem').innerHTML=mem+'<span class="mu">%</span>';
+  document.getElementById('bw').innerHTML=bw+'<span class="mu">Gbps</span>';
+  document.getElementById('lat').innerHTML=lat+'<span class="mu">ms</span>';
+  document.getElementById('rps').innerHTML=rps;
+  document.getElementById('sess').textContent=sess;
+
+  document.getElementById('cpu-bar').style.width=cpu+'%';
+  document.getElementById('mem-bar').style.width=mem+'%';
+  document.getElementById('bw-bar').style.width=(bw/3*100)+'%';
+  document.getElementById('lat-bar').style.width=Math.min(lat*2,100)+'%';
+
+  // Update sparklines
+  ['spark-rps','spark-up','spark-sess'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const bars=el.querySelectorAll('.sb-bar');
+    if(bars.length){
+      for(let b=0;b<bars.length-1;b++) bars[b].style.height=bars[b+1].style.height;
+      bars[bars.length-1].style.height=(Math.random()*70+20)+'%';
+    }
+  });
+}
+setInterval(animateMetrics,1800);
+</script>
+</body>
+</html>
